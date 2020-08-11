@@ -1,4 +1,4 @@
-/*! Ascii Figure To SVG v1.0.0 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
+/*! Ascii Figure To SVG v1.0.1 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
 
 'use strict';
 
@@ -42,7 +42,7 @@ mod.default = {
 			lineW: 2		// 線の太さ
 		},
 		txtAttr: {			// テキスト部分のSVGの属性
-			'font-family': "'sans-serif'",
+			'font-family': 'monospace',
 			'font-weight': 'normal',
 			'font-size':   '16px',
 			'fill':        '#000',
