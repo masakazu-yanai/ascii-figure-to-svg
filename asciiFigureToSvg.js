@@ -42,7 +42,7 @@ mod.default = {
 			lineW: 2		// 線の太さ
 		},
 		txtAttr: {			// テキスト部分のSVGの属性
-			'font-family': 'monospace',
+			'font-family': 'sans-serif',
 			'font-weight': 'normal',
 			'font-size':   '16px',
 			'fill':        '#000',
