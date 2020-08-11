@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>Ascii Figure To SVG</title>
+    <style>
+.txt     { width: 100%; box-sizing: border-box; margin: 0.1em 0; }
+#srcTxt  { height: 16em;  }
+#srcOpt  { height: 8em;  }
+#dstTxt  { height: 4em;  }
+#btnExec { width: 100%; height:  3em; box-sizing: border-box; margin: 0.4em 0; }
+#dstPvw  { width: 100%; height: 20em; box-sizing: border-box; }
+#txtFNm  { width: 16em; }
+    </style>
+    <script src="asciiFigureToSvg.js"></script>
+    <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+	// 初期値の設定
+	const af2s = asciiFigureToSvg;
+	const Q = document.querySelector.bind(document);
+	Q('#srcTxt').value = af2s.default.txt;
+	Q('#srcOpt').value = JSON.stringify(af2s.default.opt, null, '  ');
+
+	// 変換処理
+	const exec = () => {
+		// 変数の初期化
+		const srcTxt = Q('#srcTxt').value;
+		const srcOpt = Q('#srcOpt').value;
+
+		// 設定の読み込み
+		let opt = {};
+		try {
+			opt = JSON.parse(srcOpt);
+		} catch(e) {
+			alert(e);
+			return;
+		}
+
+		// 変換
+		const svg = af2s.genSvg(srcTxt, opt).svg;
+		Q('#dstTxt').value = svg;
+
+		const blob = new Blob([svg], {type: 'image/svg+xml'});
+		const objURL = URL.createObjectURL(blob);
+		Q('#dstPvw').src = objURL;
+
+		const blob2 = new Blob([svg], {type: 'application/octet-stream'});
+		const objURL2 = URL.createObjectURL(blob2);
+		const elADl = Q('#aDl');
+		elADl.style.display = 'inline';
+		elADl.setAttribute('href', objURL2);
+	};
+	exec();		// 初回時処理
+
+	// クリック時の処理を設定
+	const elBtn = Q('#btnExec');
+	elBtn.addEventListener('click', exec);
+
+	// クリック時の処理を設定
+	const elADl = Q('#aDl');
+	elADl.addEventListener('click', () => {
+		const txtFNm = Q('#txtFNm').value;
+		elADl.setAttribute('download', txtFNm);
+	});
+});
+
+    </script>
+  </head>
+  <body>
+    <h1>Ascii Figure To SVG</h1>
+    <div>
+      Text:<br>
+      <textarea class="txt" id="srcTxt"></textarea>
+    </div>
+    <div>
+      Settings:<br>
+      <textarea class="txt" id="srcOpt"></textarea>
+    </div>
+    <div>
+      <input type="button" value="Exec" id="btnExec">
+    </div>
+    <div>
+      Output:<br>
+      <input type="text" value="download.svg" id="txtFNm"><br>
+      <a href="" id="aDl" style="display: none;">Download</a>
+      <textarea class="txt" id="dstTxt"></textarea>
+    </div>
+    <div>
+      Preview:<br>
+      <iframe id="dstPvw"></iframe>
+    </div>
+  </body>
+</html>
