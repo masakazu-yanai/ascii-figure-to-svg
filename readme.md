@@ -2,7 +2,7 @@
 
 アスキーアートで作図したテキストを、SVGファイルに変換します。
 
-* version: 1.0.0
+* version: 1.0.1
 * Author: Masakazu Yanai
   * https://crocro.com/
   * https://twitter.com/ruten
