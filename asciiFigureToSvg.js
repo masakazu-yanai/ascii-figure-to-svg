@@ -1,4 +1,4 @@
-/*! Ascii Figure To SVG v1.0.1 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
+/*! Ascii Figure To SVG v1.0.2 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
 
 'use strict';
 
@@ -210,10 +210,11 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 	})();
 
 	// 変数の初期化
-	let xA = [], yA = [];
-	const doOfst = function() {
-		xA = xA.map(n => n + xOfst);
-		yA = yA.map(n => n + yOfst);
+	let xA  = [], yA  = [],		// xArr, yArr
+		xA2 = [], yA2 = [];
+	const doOfst = function(xArr, yArr) {
+		xArr = xArr.map(n => n + xOfst);
+		yArr = yArr.map(n => n + yOfst);
 	};
 
 	//------------------------------------------------------------
@@ -226,7 +227,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		// 横棒
 		xA[0] = x * uW;			yA[0] = y * uH + (uH - lnW) / 2;
 		xA[1] = x * uW + uW;	yA[1] = y * uH + (uH + lnW) / 2;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 	}
@@ -238,7 +239,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		// 縦棒
 		xA[0] = x * uW + (uW - lnW) / 2;	yA[0] = y * uH;
 		xA[1] = x * uW + (uW + lnW) / 2;	yA[1] = y * uH + uH;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 	}
@@ -262,13 +263,13 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW + (uW - lnW) / 2;	yA[1] = y * uH + uH / 2;
 			xA[2] = x * uW + uW / 2;			yA[2] = y * uH + (uH + lnW) / 2;
 			xA[3] = x * uW + (uW + lnW) / 2;	yA[3] = y * uH + uH / 2;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		} else {
 			xA[0] = x * uW + (uW - lnW) / 2;	yA[0] = y * uH + (uH - lnW) / 2;
 			xA[1] = x * uW + (uW + lnW) / 2;	yA[1] = y * uH + (uH + lnW) / 2;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 		}
@@ -277,7 +278,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		if (t) {
 			xA[0] = x * uW + (uW - lnW) / 2;	yA[0] = y * uH;
 			xA[1] = x * uW + (uW + lnW) / 2;	yA[1] = y * uH + uH / 2;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 		}
@@ -285,7 +286,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		if (b) {
 			xA[0] = x * uW + (uW - lnW) / 2;	yA[0] = y * uH + uH / 2;
 			xA[1] = x * uW + (uW + lnW) / 2;	yA[1] = y * uH + uH;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 		}
@@ -293,7 +294,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		if (l) {
 			xA[0] = x * uW;				yA[0] = y * uH + (uH - lnW) / 2;
 			xA[1] = x * uW + uW / 2;	yA[1] = y * uH + (uH + lnW) / 2;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 		}
@@ -301,7 +302,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		if (r) {
 			xA[0] = x * uW + uW / 2;	yA[0] = y * uH + (uH - lnW) / 2;
 			xA[1] = x * uW + uW;		yA[1] = y * uH + (uH + lnW) / 2;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 		}
@@ -312,7 +313,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW + (uW - lnW) / 2;	yA[1] = y * uH + uH / 2;
 			xA[2] = x * uW + (uW + lnW) / 2;	yA[2] = y * uH + uH / 2;
 			xA[3] = x * uW + lnW / 2;			yA[3] = y * uH;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		}
@@ -322,7 +323,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW + (uW - lnW) / 2;	yA[1] = y * uH + uH / 2;
 			xA[2] = x * uW + (uW + lnW) / 2;	yA[2] = y * uH + uH / 2;
 			xA[3] = x * uW + uW + lnW / 2;		yA[3] = y * uH;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		}
@@ -332,7 +333,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW - lnW / 2;			yA[1] = y * uH + uH;
 			xA[2] = x * uW + lnW / 2;			yA[2] = y * uH + uH;
 			xA[3] = x * uW + (uW + lnW) / 2;	yA[3] = y * uH + uH / 2;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		}
@@ -342,7 +343,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW + uW - lnW / 2;		yA[1] = y * uH + uH;
 			xA[2] = x * uW + uW + lnW / 2;		yA[2] = y * uH + uH;
 			xA[3] = x * uW + (uW + lnW) / 2;	yA[3] = y * uH + uH / 2;
-			doOfst();
+			doOfst(xA, yA);
 			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		}
@@ -355,7 +356,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		// 全角縦棒
 		xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH;
 		xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH + uH;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 	}
@@ -372,7 +373,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		xA[1] = x * uW + uW + lnW / 2;
 		yA[0] = t ? y * uH      : y * uH + (uH - lnW) / 2;
 		yA[1] = b ? y * uH + uH : y * uH + (uH + lnW) / 2;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 
@@ -381,7 +382,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		xA[1] = r ? x * uW + uW * 2 : x * uW + uW + lnW / 2;
 		yA[0] = y * uH + (uH - lnW) / 2;
 		yA[1] = y * uH + (uH + lnW) / 2;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 	}
@@ -397,45 +398,88 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 
 		// 上向き矢印
 		if (b) {
-			xA[0] = x * uW + uW / 2;	yA[0] = y * uH + uH / 2;
-			xA[1] = x * uW;				yA[1] = y * uH + uH;
-			xA[2] = x * uW + uW;		yA[2] = y * uH + uH;
+			// 矢印
+			xA[0] = x * uW + uW / 2;	yA[0] = y * uH;
+			xA[1] = x * uW;				yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW;		yA[2] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + (uW - lnW) / 2;	yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + (uW + lnW) / 2;	yA[1] = y * uH + uH;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 		} else
 		if (br) {
-			xA[0] = x * uW + uW * 0.2 + uW / 2;	yA[0] = y * uH + uH * 0.2 + uH / 2;
-			xA[1] = x * uW + uW * 0.2 + uW;		yA[1] = y * uH + uH * 0.2 + uH;
-			xA[2] = x * uW + uW * 0.2 + uW;		yA[2] = y * uH + uH * 0.2 + uH;
+			// 矢印
+			xA[0] = x * uW + uW * 0.2;			yA[0] = y * uH + uH * 0.2;
+			xA[1] = x * uW + uW * 0.2 + uW / 2;	yA[1] = y * uH + uH * 0.2 + uH / 2;
+			xA[2] = x * uW + uW * 0.2 + uW / 2;	yA[2] = y * uH + uH * 0.2 + uH / 2;
 
 			var radian = -Math.atan2(uH, uW / 2);
 			xA[1] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] += Math.cos(radian * Math.PI / 2) * uW * 0.5
 			yA[2] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW / 2 - lnW / 2;	yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + uW / 2 + lnW / 2;	yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW + lnW / 2;		yA[2] = y * uH + uH;
+			xA[3] = x * uW + uW - lnW / 2;		yA[3] = y * uH + uH;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		} else
 		if (bl) {
-			xA[0] = x * uW - uW * 0.2 + uW / 2;	yA[0] = y * uH + uH * 0.2 + uH / 2;
-			xA[1] = x * uW - uW * 0.2;			yA[1] = y * uH + uH * 0.2 + uH;
-			xA[2] = x * uW - uW * 0.2;			yA[2] = y * uH + uH * 0.2 + uH;
+			// 矢印
+			xA[0] = x * uW - uW * 0.2 + uW;		yA[0] = y * uH + uH * 0.2;
+			xA[1] = x * uW - uW * 0.2 + uW / 2;	yA[1] = y * uH + uH * 0.2 + uH / 2;
+			xA[2] = x * uW - uW * 0.2 + uW / 2;	yA[2] = y * uH + uH * 0.2 + uH / 2;
 
 			var radian = Math.atan2(uH, uW / 2);
 			xA[1] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
 			yA[2] += Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW / 2 - lnW / 2;	yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + uW / 2 + lnW / 2;	yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + lnW / 2;			yA[2] = y * uH + uH;
+			xA[3] = x * uW - lnW / 2;			yA[3] = y * uH + uH;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		}
-		doOfst();
-		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
 	}
 	if (c.c === '＾') {
 		res.isMrk = "｜＋".indexOf(arnd[1][0].c) >= 0;
 		if (! res.isMrk) {return res}
 
 		// 全角上向き矢印
-		xA[0] = x * uW + uW;		yA[0] = y * uH + uH / 2;
-		xA[1] = x * uW + uW * 0.5;	yA[1] = y * uH + uH;
-		xA[2] = x * uW + uW * 1.5;	yA[2] = y * uH + uH;
-		doOfst();
-		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+		xA[0] = x * uW + uW;		yA[0] = y * uH;
+		xA[1] = x * uW + uW * 0.5;	yA[1] = y * uH + uH / 2;
+		xA[2] = x * uW + uW * 1.5;	yA[2] = y * uH + uH / 2;
+		doOfst(xA, yA);
+		res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+		// 全角縦棒
+		xA = [], yA = [];
+		xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH + uH / 2;
+		xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH + uH;
+		doOfst(xA, yA);
+		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 	}
 	if (c.c === 'v') {
 		let t = "|+".indexOf(arnd[-1][0].c) >= 0;
@@ -447,45 +491,88 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 
 		// 下向き矢印
 		if (t) {
-			xA[0] = x * uW + uW / 2;	yA[0] = y * uH + uH / 2;
-			xA[1] = x * uW;				yA[1] = y * uH;
-			xA[2] = x * uW + uW;		yA[2] = y * uH;
+			// 矢印
+			xA[0] = x * uW + uW / 2;	yA[0] = y * uH + uH;
+			xA[1] = x * uW;				yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW;		yA[2] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + (uW - lnW) / 2;	yA[0] = y * uH;
+			xA[1] = x * uW + (uW + lnW) / 2;	yA[1] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 		} else
 		if (tl) {
-			xA[0] = x * uW - uW * 0.2 + uW / 2;	yA[0] = y * uH - uH * 0.2 + uH / 2;
-			xA[1] = x * uW - uW * 0.2;			yA[1] = y * uH - uH * 0.2;
-			xA[2] = x * uW - uW * 0.2;			yA[2] = y * uH - uH * 0.2;
+			// 矢印
+			xA[0] = x * uW - uW * 0.2 + uW;		yA[0] = y * uH - uH * 0.2 + uH;
+			xA[1] = x * uW - uW * 0.2 + uW / 2;	yA[1] = y * uH - uH * 0.2 + uH / 2;
+			xA[2] = x * uW - uW * 0.2 + uW / 2;	yA[2] = y * uH - uH * 0.2 + uH / 2;
 
 			var radian = -Math.atan2(uH, uW / 2);
 			xA[1] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
 			yA[2] += Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW  - lnW / 2;		yA[0] = y * uH;
+			xA[1] = x * uW + lnW / 2;		yA[1] = y * uH;
+			xA[2] = x * uW + uW / 2 + lnW / 2;	yA[2] = y * uH + uH / 2;
+			xA[3] = x * uW + uW / 2 - lnW / 2;	yA[3] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		} else
 		if (tr) {
-			xA[0] = x * uW + uW * 0.2 + uW / 2;	yA[0] = y * uH - uH * 0.2 + uH / 2;
-			xA[1] = x * uW + uW * 0.2 + uW;		yA[1] = y * uH - uH * 0.2;
-			xA[2] = x * uW + uW * 0.2 + uW;		yA[2] = y * uH - uH * 0.2;
+			// 矢印
+			xA[0] = x * uW + uW * 0.2;			yA[0] = y * uH - uH * 0.2 + uH;
+			xA[1] = x * uW + uW * 0.2 + uW / 2;	yA[1] = y * uH - uH * 0.2 + uH / 2;
+			xA[2] = x * uW + uW * 0.2 + uW / 2;	yA[2] = y * uH - uH * 0.2 + uH / 2;
 
 			var radian = Math.atan2(uH, uW / 2);
 			xA[1] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] += Math.cos(radian * Math.PI / 2) * uW * 0.5
 			yA[2] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH;
+			xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH;
+			xA[2] = x * uW + uW / 2 + lnW / 2;	yA[2] = y * uH + uH / 2;
+			xA[3] = x * uW + uW / 2 - lnW / 2;	yA[3] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 		}
-		doOfst();
-		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
 	}
 	if (c.c === 'ｖ') {
 		res.isMrk = "｜＋".indexOf(arnd[-1][0].c) >= 0;
 		if (! res.isMrk) {return res}
 
 		// 全角下向き矢印
-		xA[0] = x * uW + uW;		yA[0] = y * uH + uH / 2;
-		xA[1] = x * uW + uW * 0.5;	yA[1] = y * uH;
-		xA[2] = x * uW + uW * 1.5;	yA[2] = y * uH;
-		doOfst();
-		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+		xA[0] = x * uW + uW;		yA[0] = y * uH + uH;
+		xA[1] = x * uW + uW * 0.5;	yA[1] = y * uH + uH / 2;
+		xA[2] = x * uW + uW * 1.5;	yA[2] = y * uH + uH / 2;
+		doOfst(xA, yA);
+		res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+		// 全角縦棒
+		xA = [], yA = [];
+		xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH;
+		xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH + uH / 2;
+		doOfst(xA, yA);
+		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 	}
 	if (c.c === '<') {
 		let l = "-+＋".indexOf(arnd[0][1].c) >= 0;
@@ -496,7 +583,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		xA[0] = x * uW;			yA[0] = y * uH + uH * 0.5;
 		xA[1] = x * uW + uW;	yA[1] = y * uH + uH * 0.75;
 		xA[2] = x * uW + uW;	yA[2] = y * uH + uH * 0.25;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
 	}
 	if (c.c === '>') {
@@ -508,7 +595,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		xA[0] = x * uW + uW;	yA[0] = y * uH + uH * 0.5;
 		xA[1] = x * uW;			yA[1] = y * uH + uH * 0.75;
 		xA[2] = x * uW;			yA[2] = y * uH + uH * 0.25;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
 	}
 
@@ -524,7 +611,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH;
 		xA[2] = x * uW + lnW / 2;			yA[2] = y * uH + uH;
 		xA[3] = x * uW - lnW / 2;			yA[3] = y * uH + uH;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 	}
@@ -538,7 +625,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		xA[1] = x * uW + lnW / 2;			yA[1] = y * uH;
 		xA[2] = x * uW + uW + lnW / 2;		yA[2] = y * uH + uH;
 		xA[3] = x * uW + uW - lnW / 2;		yA[3] = y * uH + uH;
-		doOfst();
+		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 	}
