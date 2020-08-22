@@ -1,4 +1,4 @@
-/*! Ascii Figure To SVG v1.0.2 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
+/*! Ascii Figure To SVG v1.0.3 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
 
 'use strict';
 
@@ -14,7 +14,7 @@ try {
 }
 
 //------------------------------------------------------------
-mod.version = '1.0.2';
+mod.version = '1.0.3';
 
 // デフォルト値
 mod.default = {
@@ -34,6 +34,13 @@ mod.default = {
 +えおかき+ \ def / / \    |                 +-------> お城 |
  \くけこ/   +---+  \ /    |                                |
   +----+            +     +--------------------------------+
+  
+  ＾  --＋    ＋    ＋--  ＾
+    ＼    ＼／  ＼／    ／  
+      ＼  ／＼｜／＼  ／    
+        ＋  --＋--  ＋      
+      ／  ＼  ｜  ／  ＼    
+    ｖ      ｖ  ｖ      ｖ  
 `.replace(/^\n|\n$/g, ''),
 	opt: {
 		prms: {
@@ -47,7 +54,15 @@ mod.default = {
 			'font-size':   '16px',
 			'fill':        '#000',
 			'alignment-baseline': 'middle',
-			'text-anchor': 'middle'
+			'text-anchor': 'middle',
+			cond: {			// 条件分岐で属性を設定
+				han: {
+					'font-family': 'monospace',
+					'dy': '1.5px'
+				},
+				zen: {
+				}
+			}
 		},
 		figAttr: {			// 作図部分のSVGの属性
 			'fill':   '#000',
@@ -60,7 +75,16 @@ mod.default = {
 //------------------------------------------------------------
 // 半角か確認
 mod.isHan = function(c) {
-	return escape(c.charAt(0)).length < 4;
+	const code = c.charCodeAt(0);
+	let res = false;
+	if ((code >= 0x00 && code < 0x81)
+	 ||	(code === 0xf8f0)
+	 ||	(code >= 0xff61 && code < 0xffa0)
+	 ||	(code >= 0xf8f1 && code < 0xf8f4)
+	) {
+		res = true;
+	}
+	return res;
 };
 
 //------------------------------------------------------------
@@ -70,7 +94,7 @@ mod.genSvg = function(txt, opt) {
 	txt = txt.replace(/\r/g, '').replace(/^\uFEFF/, '');
 
 	// 文字を分解
-	const cMrk = "+-|<>^v＋｜＾ｖ/\\";	// 記号候補の文字
+	const cMrk = "+-|<>^v＋｜＾ｖ／＼/\\";	// 記号候補の文字
 	let xMax = 0;
 	const cArrArr = txt.split('\n').map(x => {
 		const cArr = [];
@@ -139,7 +163,19 @@ mod.genSvg = function(txt, opt) {
 			const posX = xOfst + (c.isHan ? (x + 0.5) * uW : (x + 1) * uW);
 			const posY = yOfst + (y + 0.5) * uH;
 
-			const o = Object.assign({x: posX, y: posY}, opt.txtAttr);
+			// 属性の取り出しと条件分岐
+			let txtAttrTmp = Object.assign({}, opt.txtAttr);
+			const cond = opt.txtAttr.cond;
+			delete txtAttrTmp.cond
+
+			if (c.isHan && cond.han) {
+				txtAttrTmp = Object.assign(txtAttrTmp, cond.han);
+			} else if (cond.zen) {
+				txtAttrTmp = Object.assign(txtAttrTmp, cond.zen);
+			}
+
+			// タグの作成
+			const o = Object.assign({x: posX, y: posY}, txtAttrTmp);
 			const attr = Object.keys(o).map(key => `${key}="${o[key]}"`).join(' ');
 			const c2 = c.c
 				.replace(/&/g, '&amp;')
@@ -365,26 +401,105 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		let b = "｜＋ｖ".indexOf(arnd[ 1][0].c) >= 0;
 		let l = "-+＋<>.'".indexOf(arnd[0][-1].c) >= 0;
 		let r = "-+＋<>.'".indexOf(arnd[0][ 2].c) >= 0;
-		res.isMrk = t || b || l || r;
+
+		let tl = "＼".indexOf(arnd[-1][-1].c) >= 0;
+		let tr = "／".indexOf(arnd[-1][2].c) >= 0;
+		let bl = "／".indexOf(arnd[1][-1].c) >= 0;
+		let br = "＼".indexOf(arnd[1][2].c) >= 0;
+
+		res.isMrk = t || b || l || r || tl || tr || bl || br;
 		if (! res.isMrk) {return res}
 
-		// 全角縦棒
-		xA[0] = x * uW + uW - lnW / 2;
-		xA[1] = x * uW + uW + lnW / 2;
-		yA[0] = t ? y * uH      : y * uH + (uH - lnW) / 2;
-		yA[1] = b ? y * uH + uH : y * uH + (uH + lnW) / 2;
-		doOfst(xA, yA);
-		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
-			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		// 中心
+		if (tl || tr || bl || br) {
+			xA[0] = x * uW + uW;			yA[0] = y * uH + (uH - lnW) / 2;
+			xA[1] = x * uW + uW - lnW / 2;	yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW;			yA[2] = y * uH + (uH + lnW) / 2;
+			xA[3] = x * uW + uW + lnW / 2;	yA[3] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		} else {
+			xA[0] = x * uW + uW - lnW / 2;	yA[0] = y * uH + (uH - lnW) / 2;
+			xA[1] = x * uW + uW + lnW / 2;	yA[1] = y * uH + (uH + lnW) / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		}
 
-		// 全角横棒
-		xA[0] = l ? x * uW          : x * uW + uW - lnW / 2;
-		xA[1] = r ? x * uW + uW * 2 : x * uW + uW + lnW / 2;
-		yA[0] = y * uH + (uH - lnW) / 2;
-		yA[1] = y * uH + (uH + lnW) / 2;
-		doOfst(xA, yA);
-		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
-			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		// 上
+		if (t) {
+			xA[0] = x * uW + uW - lnW / 2;	yA[0] = y * uH;
+			xA[1] = x * uW + uW + lnW / 2;	yA[1] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		}
+		// 下
+		if (b) {
+			xA[0] = x * uW + uW - lnW / 2;	yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + uW + lnW / 2;	yA[1] = y * uH + uH;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		}
+		// 左
+		if (l) {
+			xA[0] = x * uW;			yA[0] = y * uH + (uH - lnW) / 2;
+			xA[1] = x * uW + uW;	yA[1] = y * uH + (uH + lnW) / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		}
+		// 右
+		if (r) {
+			xA[0] = x * uW + uW;		yA[0] = y * uH + (uH - lnW) / 2;
+			xA[1] = x * uW + uW * 2;	yA[1] = y * uH + (uH + lnW) / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		}
+
+		// 上左
+		if (tl) {
+			xA[0] = x * uW - lnW / 2;		yA[0] = y * uH;
+			xA[1] = x * uW + uW - lnW / 2;	yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW + lnW / 2;	yA[2] = y * uH + uH / 2;
+			xA[3] = x * uW + lnW / 2;		yA[3] = y * uH;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		}
+		// 上右
+		if (tr) {
+			xA[0] = x * uW + uW * 2 - lnW / 2;	yA[0] = y * uH;
+			xA[1] = x * uW + uW - lnW / 2;		yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW + lnW / 2;		yA[2] = y * uH + uH / 2;
+			xA[3] = x * uW + uW* 2 + lnW / 2;	yA[3] = y * uH;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		}
+		// 下左
+		if (bl) {
+			xA[0] = x * uW + uW - lnW / 2;	yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW - lnW / 2;		yA[1] = y * uH + uH;
+			xA[2] = x * uW + lnW / 2;		yA[2] = y * uH + uH;
+			xA[3] = x * uW + uW + lnW / 2;	yA[3] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		}
+		// 下右
+		if (br) {
+			xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + uW * 2 - lnW / 2;	yA[1] = y * uH + uH;
+			xA[2] = x * uW + uW * 2 + lnW / 2;	yA[2] = y * uH + uH;
+			xA[3] = x * uW + uW + lnW / 2;		yA[3] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		}
 	}
 
 	//------------------------------------------------------------
@@ -419,7 +534,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW + uW * 0.2 + uW / 2;	yA[1] = y * uH + uH * 0.2 + uH / 2;
 			xA[2] = x * uW + uW * 0.2 + uW / 2;	yA[2] = y * uH + uH * 0.2 + uH / 2;
 
-			var radian = -Math.atan2(uH, uW / 2);
+			const radian = -Math.atan2(uH, uW / 2);
 			xA[1] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] += Math.cos(radian * Math.PI / 2) * uW * 0.5
@@ -443,7 +558,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW - uW * 0.2 + uW / 2;	yA[1] = y * uH + uH * 0.2 + uH / 2;
 			xA[2] = x * uW - uW * 0.2 + uW / 2;	yA[2] = y * uH + uH * 0.2 + uH / 2;
 
-			var radian = Math.atan2(uH, uW / 2);
+			const radian = Math.atan2(uH, uW / 2);
 			xA[1] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
@@ -463,6 +578,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		}
 	}
 	if (c.c === '＾') {
+/*
 		res.isMrk = "｜＋".indexOf(arnd[1][0].c) >= 0;
 		if (! res.isMrk) {return res}
 
@@ -480,6 +596,80 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		doOfst(xA, yA);
 		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
 			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+*/
+		let b = "｜＋".indexOf(arnd[1][0].c) >= 0;
+		let br = "＼".indexOf(arnd[1][2].c) >= 0;
+		let bl = "／".indexOf(arnd[1][-1].c) >= 0;
+		res.isMrk = b || br || bl;
+		if (! res.isMrk) {return res}
+
+		// 上向き矢印
+		if (b) {
+			// 矢印
+			xA[0] = x * uW + uW;		yA[0] = y * uH;
+			xA[1] = x * uW;				yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW * 2;	yA[2] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW - lnW / 2;	yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + uW + lnW / 2;	yA[1] = y * uH + uH;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		} else
+		if (br) {
+			// 矢印（左斜め上方向）
+			xA[0] = x * uW + uW * 0.4;			yA[0] = y * uH + uH * 0.2;
+			xA[1] = x * uW + uW * 0.4 + uW;		yA[1] = y * uH + uH * 0.2 + uH / 2;
+			xA[2] = x * uW + uW * 0.4 + uW;		yA[2] = y * uH + uH * 0.2 + uH / 2;
+
+			const radian = -Math.atan2(uH, uW * 0.33);
+			xA[1] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
+			xA[2] += Math.sin(radian * Math.PI / 2) * uW * 0.5
+			yA[1] += Math.cos(radian * Math.PI / 2) * uW * 0.5
+			yA[2] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW * 2 + lnW / 2;	yA[2] = y * uH + uH;
+			xA[3] = x * uW + uW * 2 - lnW / 2;	yA[3] = y * uH + uH;
+
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		} else
+		if (bl) {
+			// 矢印（右斜め上方向）
+			xA[0] = x * uW - uW * 0.4 + uW * 2;	yA[0] = y * uH + uH * 0.2;
+			xA[1] = x * uW - uW * 0.4 + uW;		yA[1] = y * uH + uH * 0.2 + uH / 2;
+			xA[2] = x * uW - uW * 0.4 + uW;		yA[2] = y * uH + uH * 0.2 + uH / 2;
+
+			const radian = Math.atan2(uH, uW * 0.33);
+			xA[1] += Math.sin(radian * Math.PI / 2) * uW * 0.5
+			xA[2] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
+			yA[1] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
+			yA[2] += Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW - lnW / 2;	yA[0] = y * uH + uH / 2;
+			xA[1] = x * uW + uW + lnW / 2;	yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + lnW / 2;		yA[2] = y * uH + uH;
+			xA[3] = x * uW - lnW / 2;		yA[3] = y * uH + uH;
+
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		}
 	}
 	if (c.c === 'v') {
 		let t = "|+".indexOf(arnd[-1][0].c) >= 0;
@@ -512,7 +702,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW - uW * 0.2 + uW / 2;	yA[1] = y * uH - uH * 0.2 + uH / 2;
 			xA[2] = x * uW - uW * 0.2 + uW / 2;	yA[2] = y * uH - uH * 0.2 + uH / 2;
 
-			var radian = -Math.atan2(uH, uW / 2);
+			const radian = -Math.atan2(uH, uW / 2);
 			xA[1] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
@@ -522,7 +712,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 
 			// 縦棒
 			xA = [], yA = [];
-			xA[0] = x * uW  - lnW / 2;		yA[0] = y * uH;
+			xA[0] = x * uW - lnW / 2;		yA[0] = y * uH;
 			xA[1] = x * uW + lnW / 2;		yA[1] = y * uH;
 			xA[2] = x * uW + uW / 2 + lnW / 2;	yA[2] = y * uH + uH / 2;
 			xA[3] = x * uW + uW / 2 - lnW / 2;	yA[3] = y * uH + uH / 2;
@@ -536,7 +726,7 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			xA[1] = x * uW + uW * 0.2 + uW / 2;	yA[1] = y * uH - uH * 0.2 + uH / 2;
 			xA[2] = x * uW + uW * 0.2 + uW / 2;	yA[2] = y * uH - uH * 0.2 + uH / 2;
 
-			var radian = Math.atan2(uH, uW / 2);
+			const radian = Math.atan2(uH, uW / 2);
 			xA[1] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
 			xA[2] += Math.sin(radian * Math.PI / 2) * uW * 0.5
 			yA[1] += Math.cos(radian * Math.PI / 2) * uW * 0.5
@@ -556,23 +746,82 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		}
 	}
 	if (c.c === 'ｖ') {
-		res.isMrk = "｜＋".indexOf(arnd[-1][0].c) >= 0;
+		let t = "｜＋".indexOf(arnd[-1][0].c) >= 0;
+		let tl = "＼".indexOf(arnd[-1][-1].c) >= 0;
+		let tr = "／".indexOf(arnd[-1][2].c) >= 0;
+
+		res.isMrk = t || tl || tr;
 		if (! res.isMrk) {return res}
 
-		// 全角下向き矢印
-		xA[0] = x * uW + uW;		yA[0] = y * uH + uH;
-		xA[1] = x * uW + uW * 0.5;	yA[1] = y * uH + uH / 2;
-		xA[2] = x * uW + uW * 1.5;	yA[2] = y * uH + uH / 2;
-		doOfst(xA, yA);
-		res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+		// 下向き矢印
+		if (t) {
+			// 矢印
+			xA[0] = x * uW + uW;		yA[0] = y * uH + uH;
+			xA[1] = x * uW;				yA[1] = y * uH + uH / 2;
+			xA[2] = x * uW + uW * 2;	yA[2] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
 
-		// 全角縦棒
-		xA = [], yA = [];
-		xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH;
-		xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH + uH / 2;
-		doOfst(xA, yA);
-		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
-			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW - lnW / 2;	yA[0] = y * uH;
+			xA[1] = x * uW + uW + lnW / 2;	yA[1] = y * uH + uH / 2;
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
+				+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
+		} else
+		if (tl) {
+			// 矢印
+			xA[0] = x * uW - uW * 0.4 + uW * 2;	yA[0] = y * uH - uH * 0.2 + uH;
+			xA[1] = x * uW - uW * 0.4 + uW;		yA[1] = y * uH - uH * 0.2 + uH / 2;
+			xA[2] = x * uW - uW * 0.4 + uW;		yA[2] = y * uH - uH * 0.2 + uH / 2;
+
+			const radian = -Math.atan2(uH, uW * 0.25);
+			xA[1] += Math.sin(radian * Math.PI / 2) * uW * 0.5
+			xA[2] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
+			yA[1] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
+			yA[2] += Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW - lnW / 2;		yA[0] = y * uH;
+			xA[1] = x * uW + lnW / 2;		yA[1] = y * uH;
+			xA[2] = x * uW + uW + lnW / 2;	yA[2] = y * uH + uH / 2;
+			xA[3] = x * uW + uW - lnW / 2;	yA[3] = y * uH + uH / 2;
+
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		} else
+		if (tr) {
+			// 矢印
+			xA[0] = x * uW + uW * 0.4;		yA[0] = y * uH - uH * 0.2 + uH;
+			xA[1] = x * uW + uW * 0.4 + uW;	yA[1] = y * uH - uH * 0.2 + uH / 2;
+			xA[2] = x * uW + uW * 0.4 + uW;	yA[2] = y * uH - uH * 0.2 + uH / 2;
+
+			const radian = Math.atan2(uH, uW * 0.33);
+			xA[1] -= Math.sin(radian * Math.PI / 2) * uW * 0.5
+			xA[2] += Math.sin(radian * Math.PI / 2) * uW * 0.5
+			yA[1] += Math.cos(radian * Math.PI / 2) * uW * 0.5
+			yA[2] -= Math.cos(radian * Math.PI / 2) * uW * 0.5
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
+
+			// 縦棒
+			xA = [], yA = [];
+			xA[0] = x * uW + uW * 2 - lnW / 2;		yA[0] = y * uH;
+			xA[1] = x * uW + uW * 2 + lnW / 2;		yA[1] = y * uH;
+			xA[2] = x * uW + uW + lnW / 2;	yA[2] = y * uH + uH / 2;
+			xA[3] = x * uW + uW - lnW / 2;	yA[3] = y * uH + uH / 2;
+
+			doOfst(xA, yA);
+			res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+				+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+		}
+
+
 	}
 	if (c.c === '<') {
 		let l = "-+＋".indexOf(arnd[0][1].c) >= 0;
@@ -625,6 +874,34 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		xA[1] = x * uW + lnW / 2;			yA[1] = y * uH;
 		xA[2] = x * uW + uW + lnW / 2;		yA[2] = y * uH + uH;
 		xA[3] = x * uW + uW - lnW / 2;		yA[3] = y * uH + uH;
+		doOfst(xA, yA);
+		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+	}
+	if (c.c === '／') {
+		res.isMrk = "／＾＋".indexOf(arnd[-1][2].c) >= 0
+				 || "／ｖ＋".indexOf(arnd[ 1][-1].c) >= 0;
+		if (! res.isMrk) {return res}
+
+		// 右上斜め
+		xA[0] = x * uW + uW * 2 - lnW / 2;	yA[0] = y * uH;
+		xA[1] = x * uW + uW * 2 + lnW / 2;	yA[1] = y * uH;
+		xA[2] = x * uW + lnW / 2;			yA[2] = y * uH + uH;
+		xA[3] = x * uW - lnW / 2;			yA[3] = y * uH + uH;
+		doOfst(xA, yA);
+		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
+			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
+	}
+	if (c.c === '＼') {
+		res.isMrk = "＼＾＋".indexOf(arnd[-1][-1].c) >= 0
+				 || "＼ｖ＋".indexOf(arnd[ 1][2].c) >= 0;
+		if (! res.isMrk) {return res}
+
+		// 左上斜め
+		xA[0] = x * uW - lnW / 2;			yA[0] = y * uH;
+		xA[1] = x * uW + lnW / 2;			yA[1] = y * uH;
+		xA[2] = x * uW + uW * 2 + lnW / 2;	yA[2] = y * uH + uH;
+		xA[3] = x * uW + uW * 2 - lnW / 2;	yA[3] = y * uH + uH;
 		doOfst(xA, yA);
 		res.pth = `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} `
 			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
