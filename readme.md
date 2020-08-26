@@ -2,7 +2,7 @@
 
 アスキーアートで作図したテキストを、SVGファイルに変換します。
 
-* version: 1.0.3
+* version: 1.0.4
 * Author: Masakazu Yanai
   * https://crocro.com/
   * https://twitter.com/ruten
@@ -135,12 +135,19 @@ const svg = af2s.genSvg(txt, opt).svg;
 			lineW: 2		// 線の太さ
 		},
 		txtAttr: {			// テキスト部分のSVGの属性
-			'font-family': "'sans-serif'",
+			'font-family': 'Meiryo, sans-serif',
 			'font-weight': 'normal',
 			'font-size':   '16px',
 			'fill':        '#000',
-			'alignment-baseline': 'middle',
-			'text-anchor': 'middle'
+			'dominant-baseline': 'central',
+			'text-anchor': 'middle',
+			cond: {			// 条件分岐で属性を設定
+				han: {
+					'font-family': "MS Gothic, monospace",
+				},
+				zen: {
+				}
+			}
 		},
 		figAttr: {			// 作図部分のSVGの属性
 			'fill':   '#000',

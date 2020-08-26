@@ -1,4 +1,4 @@
-/*! Ascii Figure To SVG v1.0.3 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
+/*! Ascii Figure To SVG v1.0.4 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
 
 'use strict';
 
@@ -14,7 +14,7 @@ try {
 }
 
 //------------------------------------------------------------
-mod.version = '1.0.3';
+mod.version = '1.0.4';
 
 // デフォルト値
 mod.default = {
@@ -49,16 +49,15 @@ mod.default = {
 			lineW: 2		// 線の太さ
 		},
 		txtAttr: {			// テキスト部分のSVGの属性
-			'font-family': 'sans-serif',
+			'font-family': 'Meiryo, sans-serif',
 			'font-weight': 'normal',
 			'font-size':   '16px',
 			'fill':        '#000',
-			'alignment-baseline': 'middle',
+			'dominant-baseline': 'central',
 			'text-anchor': 'middle',
 			cond: {			// 条件分岐で属性を設定
 				han: {
-					'font-family': 'monospace',
-					'dy': '1.5px'
+					'font-family': "MS Gothic, monospace",
 				},
 				zen: {
 				}
