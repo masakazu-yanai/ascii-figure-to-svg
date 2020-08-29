@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<svg width="176" height="120" viewBox="0 0 176 120"
+    xmlns="http://www.w3.org/2000/svg" version="1.1">
+	<text x="8" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">こ</text>
+	<text x="24" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">こ</text>
+	<text x="40" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">に</text>
+	<text x="56" y="110" font-family="Meiryo, sans-serif" font-weight="bold" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">注</text>
+	<text x="72" y="110" font-family="Meiryo, sans-serif" font-weight="bold" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">目</text>
+	<text x="88" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">し</text>
+	<text x="104" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">て</text>
+	<text x="120" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">下</text>
+	<text x="136" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">さ</text>
+	<text x="152" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">い</text>
+	<text x="168" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">！</text>
+	<path d="M35,9 L35,11 L37,11 L37,9 Z M35,10 L35,20 L37,20 L37,10 Z M36,9 L36,11 L40,11 L40,9 Z M40,9 L40,11 L48,11 L48,9 Z M48,9 L48,11 L56,11 L56,9 Z M56,9 L56,11 L64,11 L64,9 Z M64,9 L64,11 L72,11 L72,9 Z M72,9 L72,11 L80,11 L80,9 Z M80,9 L80,11 L88,11 L88,9 Z M91,9 L91,11 L93,11 L93,9 Z M91,10 L91,20 L93,20 L93,10 Z M88,9 L88,11 L92,11 L92,9 Z M35,20 L35,40 L37,40 L37,20 Z M91,20 L91,40 L93,40 L93,20 Z M35,49 L35,51 L37,51 L37,49 Z M35,40 L35,50 L37,50 L37,40 Z M36,49 L36,51 L40,51 L40,49 Z M40,49 L40,51 L48,51 L48,49 Z M48,49 L48,51 L56,51 L56,49 Z M56,49 L56,51 L64,51 L64,49 Z M64,49 L64,51 L72,51 L72,49 Z M72,49 L72,51 L80,51 L80,49 Z M80,49 L80,51 L88,51 L88,49 Z M91,49 L91,51 L93,51 L93,49 Z M91,40 L91,50 L93,50 L93,40 Z M88,49 L88,51 L92,51 L92,49 Z " fill="#000" stroke="#000" stroke-width="0.1px" />
+	<path d="M64,60 L56,70 L72,70 Z M63,70 L63,80 L65,80 L65,70 Z M63,80 L63,100 L65,100 L65,80 Z " fill="#f00" stroke="#f00" stroke-width="0.1px" />
+</svg>

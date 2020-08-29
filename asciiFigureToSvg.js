@@ -1,4 +1,4 @@
-/*! Ascii Figure To SVG v1.0.4 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
+/*! Ascii Figure To SVG v1.0.5 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
 
 'use strict';
 
@@ -14,7 +14,7 @@ try {
 }
 
 //------------------------------------------------------------
-mod.version = '1.0.4';
+mod.version = '1.0.5';
 
 // デフォルト値
 mod.default = {
@@ -41,6 +41,13 @@ mod.default = {
         ＋  --＋--  ＋      
       ／  ＼  ｜  ／  ＼    
     ｖ      ｖ  ｖ      ｖ  
+/*@({"y": [1, 1], "x": [17, 3], "isFig": false, "txtAttr": {"fill": "#f00"}})@*/
+/*@({"y": [1, 1], "x": [39, 3], "isFig": false, "txtAttr": {"fill": "#f00"}})@*/
+/*@({"y": [0, 3], "x": [15, 7], "figAttr": {"fill": "#00f", "stroke": "#00f"}})@*/
+/*@({"y": [0, 3], "x": [37, 7], "figAttr": {"fill": "#0f0", "stroke": "#0f0"}})@*/
+               +-----+               +-----+
+インクリメント | i++ |  デクリメント | i-- |
+               +-----+               +-----+
 `.replace(/^\n|\n$/g, ''),
 	opt: {
 		prms: {
@@ -92,6 +99,38 @@ mod.genSvg = function(txt, opt) {
 	// 文字を調整
 	txt = txt.replace(/\r/g, '').replace(/^\uFEFF/, '');
 
+	// 元文字列の計算
+	const rawObj = {txt: txt, yMax: txt.split('\n').length};
+	rawObj.xMax = Math.max.apply(null, txt.split('\n').map(y => {
+		if (y === '') { return 0 }
+		return y.split('').map(x => mod.isHan(x) ? 1 : 2).reduce((a, b) => a + b);
+	}));
+
+	// 制御領域の分離
+	let lnCnt = 0;
+	const controlArr = [];	// 制御配列
+	txt = txt.replace(/\/\*@\(([\s\S]*?)\)@\*\/(?:\n|$)|\n/g, (s, s1) => {
+		if (s === '\n') {
+			// 改行
+			lnCnt ++;
+			return s;
+		} else {
+			// 制御領域
+			try {
+				const obj = JSON.parse(s1);
+				obj.y[0] += lnCnt;
+				if (obj.y[1] === undefined) { obj.y[1] = 1 }
+				if (obj.x[1] === undefined) { obj.x[1] = 1 }
+				controlArr.push(obj);
+			} catch(e) {
+				console.log(s1, e);
+			}
+			return '';
+		}
+	});
+	//console.log(controlArr);
+	//console.log(txt);
+
 	// 文字を分解
 	const cMrk = "+-|<>^v＋｜＾ｖ／＼/\\";	// 記号候補の文字
 	let xMax = 0;
@@ -100,14 +139,14 @@ mod.genSvg = function(txt, opt) {
 		x.split('').forEach(c => {
 			// 変数の初期化
 			const isHan = mod.isHan(c);
-			const isMrk = cMrk.indexOf(c) >= 0;
+			const isFig = cMrk.indexOf(c) >= 0;
 			c = c.replace(/　/, ' ');
 
 			// 文字の格納
-			cArr.push({c: c, isHan: isHan, isMrk: isMrk, isFake: false});
+			cArr.push({c: c, isHan: isHan, isFig: isFig, isFake: false});
 			if (! isHan) {
 				// ダミーのマス
-				cArr.push({c: c, isHan: true, isMrk: false, isFake: true});
+				cArr.push({c: c, isHan: true, isFig: false, isFake: true});
 			}
 		});
 		xMax = Math.max(xMax, cArr.length);
@@ -135,7 +174,7 @@ mod.genSvg = function(txt, opt) {
 	//console.log('uW', uW, 'uH', uH, 'lnW', lnW, );
 
 	// 変数の初期化
-	let pthTxt = '';	// パス図形用文字列
+	const pthPrms = {'': {txt: '', attr: {}}};	// パス図形用
 	const xOfst = 0;
 	const yOfst = 0;
 	const grp = [];
@@ -149,11 +188,52 @@ mod.genSvg = function(txt, opt) {
 			if (c.isFake)    {continue}	// 空マスなので飛ばす
 			if (c.c === ' ') {continue}	// 空マスなので飛ばす
 
-			if (c.isMrk) {
+			// 属性の取り出しと条件分岐
+			let figAttrThis = {};
+			let txtAttrThis = Object.assign({}, opt.txtAttr);
+			const cond = opt.txtAttr.cond;
+			delete txtAttrThis.cond
+
+			if (c.isHan && cond.han) {
+				txtAttrThis = Object.assign(txtAttrThis, cond.han);
+			} else if (cond.zen) {
+				txtAttrThis = Object.assign(txtAttrThis, cond.zen);
+			}
+
+			// 制御配列
+			controlArr.forEach(cn => {
+				// 範囲の判定
+				if (y < cn.y[0]) { return }
+				if (x < cn.x[0]) { return }
+				if (cn.y[0] + cn.y[1] <= y) { return }
+				if (cn.x[0] + cn.x[1] <= x) { return }
+
+				// 設定の反映
+				if (cn.isFig !== undefined) {
+					c.isFig = cn.isFig;
+				}
+				if (cn.txtAttr !== undefined) {
+					txtAttrThis = Object.assign(txtAttrThis, cn.txtAttr);
+				}
+				if (cn.figAttr !== undefined) {
+					figAttrThis = Object.assign(figAttrThis, cn.figAttr);
+				}
+			});
+
+			// 記号の場合
+			if (c.isFig) {
 				// 記号候補
 				const res = mod.genPth(cArrArr, c,x,y, uW,uH,lnW, xOfst,yOfst);
-				if (res.isMrk) {
-					pthTxt += res.pth;
+				if (res.isFig) {
+					if (Object.keys(figAttrThis).length === 0) {
+						pthPrms[''].txt += res.pth;
+					} else {
+						const json = JSON.stringify(figAttrThis);
+						if (pthPrms[json] === undefined) {
+							pthPrms[json] = {txt: '', attr: figAttrThis};
+						}
+						pthPrms[json].txt += res.pth;
+					}
 					continue;
 				}
 			}
@@ -162,19 +242,8 @@ mod.genSvg = function(txt, opt) {
 			const posX = xOfst + (c.isHan ? (x + 0.5) * uW : (x + 1) * uW);
 			const posY = yOfst + (y + 0.5) * uH;
 
-			// 属性の取り出しと条件分岐
-			let txtAttrTmp = Object.assign({}, opt.txtAttr);
-			const cond = opt.txtAttr.cond;
-			delete txtAttrTmp.cond
-
-			if (c.isHan && cond.han) {
-				txtAttrTmp = Object.assign(txtAttrTmp, cond.han);
-			} else if (cond.zen) {
-				txtAttrTmp = Object.assign(txtAttrTmp, cond.zen);
-			}
-
 			// タグの作成
-			const o = Object.assign({x: posX, y: posY}, txtAttrTmp);
+			const o = Object.assign({x: posX, y: posY}, txtAttrThis);
 			const attr = Object.keys(o).map(key => `${key}="${o[key]}"`).join(' ');
 			const c2 = c.c
 				.replace(/&/g, '&amp;')
@@ -186,10 +255,14 @@ mod.genSvg = function(txt, opt) {
 	}
 
 	// パス図形
-	const o = opt.figAttr;
-	const attr = Object.keys(o).map(key => `${key}="${o[key]}"`).join(' ');
-	const el = `<path d="${pthTxt}" ${attr} />`;
-	grp.push(el);
+	Object.keys(pthPrms).forEach(x => {
+		const prms = pthPrms[x];
+		let attr = opt.figAttr;
+	 	attr = Object.assign({}, attr, prms.attr);
+		const attrTxt = Object.keys(attr).map(k => `${k}="${attr[k]}"`).join(' ');
+		const el = `<path d="${prms.txt}" ${attrTxt} />`;
+		grp.push(el);
+	});
 
 	// SVG作成
 	const svgIn = grp.map(x => `\t${x}`).join('\n');
@@ -209,6 +282,9 @@ ${svgIn}
 		yMax: yMax,		// 行数
 		svgW: svgW,		// SVGの横幅
 		svgH: svgH,		// SVGの高さ
+		rawTxt:  rawObj.txt,	// 生文字列
+		rawXMax: rawObj.xMax,	// 生文字列の半角換算横幅最大値
+		rawYMax: rawObj.xMax,	// 生文字列の行数
 		opt: opt		// デフォルト値と合成した設定
 	};
 	return res;
@@ -218,10 +294,10 @@ ${svgIn}
 // 文字図形パスの作成
 mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 	// 変数の初期化
-	const res = {isMrk: false, pth: ''};		// 戻り値用変数
+	const res = {isFig: false, pth: ''};		// 戻り値用変数
 
 	// 4x3マス分の配列を作成
-	const blnk = {c: ' ', isHan: true, isMrk: false, isFake: true};
+	const blnk = {c: ' ', isHan: true, isFig: false, isFake: true};
 	const arnd = {'-1': {}, '0': {}, '1': {}};	// [y][x]
 	arnd[-1][-1] = cArrArr[y - 1] ? cArrArr[y - 1][x - 1] : blnk;
 	arnd[-1][ 0] = cArrArr[y - 1] ? cArrArr[y - 1][x    ] : blnk;
@@ -255,9 +331,9 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 	//------------------------------------------------------------
 	// 罫線
 	if (c.c === '-') {
-		res.isMrk = "-+＋<>.'".indexOf(arnd[0][-1].c) >= 0
+		res.isFig = "-+＋<>.'".indexOf(arnd[0][-1].c) >= 0
 				 || "-+＋<>.'".indexOf(arnd[0][ 1].c) >= 0;
-		if (! res.isMrk) {return res}
+		if (! res.isFig) {return res}
 
 		// 横棒
 		xA[0] = x * uW;			yA[0] = y * uH + (uH - lnW) / 2;
@@ -267,9 +343,9 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
 	}
 	if (c.c === '|') {
-		res.isMrk = "|+^".indexOf(arnd[-1][0].c) >= 0
+		res.isFig = "|+^".indexOf(arnd[-1][0].c) >= 0
 				 || "|+v".indexOf(arnd[ 1][0].c) >= 0;
-		if (! res.isMrk) {return res}
+		if (! res.isFig) {return res}
 
 		// 縦棒
 		xA[0] = x * uW + (uW - lnW) / 2;	yA[0] = y * uH;
@@ -289,8 +365,8 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		let bl = "/".indexOf(arnd[1][-1].c) >= 0;
 		let br = "\\".indexOf(arnd[1][1].c) >= 0;
 
-		res.isMrk = t || b || l || r || tl || tr || bl || br;
-		if (! res.isMrk) {return res}
+		res.isFig = t || b || l || r || tl || tr || bl || br;
+		if (! res.isFig) {return res}
 
 		// 中心
 		if (tl || tr || bl || br) {
@@ -384,9 +460,9 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		}
 	}
 	if (c.c === '｜') {
-		res.isMrk = "｜＋＾".indexOf(arnd[-1][0].c) >= 0
+		res.isFig = "｜＋＾".indexOf(arnd[-1][0].c) >= 0
 				 || "｜＋ｖ".indexOf(arnd[ 1][0].c) >= 0;
-		if (! res.isMrk) {return res}
+		if (! res.isFig) {return res}
 
 		// 全角縦棒
 		xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH;
@@ -406,8 +482,8 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		let bl = "／".indexOf(arnd[1][-1].c) >= 0;
 		let br = "＼".indexOf(arnd[1][2].c) >= 0;
 
-		res.isMrk = t || b || l || r || tl || tr || bl || br;
-		if (! res.isMrk) {return res}
+		res.isFig = t || b || l || r || tl || tr || bl || br;
+		if (! res.isFig) {return res}
 
 		// 中心
 		if (tl || tr || bl || br) {
@@ -507,8 +583,8 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		let b = "|+".indexOf(arnd[1][0].c) >= 0;
 		let br = "\\".indexOf(arnd[1][1].c) >= 0;
 		let bl = "/".indexOf(arnd[1][-1].c) >= 0;
-		res.isMrk = b || br || bl;
-		if (! res.isMrk) {return res}
+		res.isFig = b || br || bl;
+		if (! res.isFig) {return res}
 
 		// 上向き矢印
 		if (b) {
@@ -577,30 +653,11 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		}
 	}
 	if (c.c === '＾') {
-/*
-		res.isMrk = "｜＋".indexOf(arnd[1][0].c) >= 0;
-		if (! res.isMrk) {return res}
-
-		// 全角上向き矢印
-		xA[0] = x * uW + uW;		yA[0] = y * uH;
-		xA[1] = x * uW + uW * 0.5;	yA[1] = y * uH + uH / 2;
-		xA[2] = x * uW + uW * 1.5;	yA[2] = y * uH + uH / 2;
-		doOfst(xA, yA);
-		res.pth += `M${xA[0]},${yA[0]} L${xA[1]},${yA[1]} L${xA[2]},${yA[2]} Z `;
-
-		// 全角縦棒
-		xA = [], yA = [];
-		xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH + uH / 2;
-		xA[1] = x * uW + uW + lnW / 2;		yA[1] = y * uH + uH;
-		doOfst(xA, yA);
-		res.pth += `M${xA[0]},${yA[0]} L${xA[0]},${yA[1]} `
-			+ `L${xA[1]},${yA[1]} L${xA[1]},${yA[0]} Z `;
-*/
 		let b = "｜＋".indexOf(arnd[1][0].c) >= 0;
 		let br = "＼".indexOf(arnd[1][2].c) >= 0;
 		let bl = "／".indexOf(arnd[1][-1].c) >= 0;
-		res.isMrk = b || br || bl;
-		if (! res.isMrk) {return res}
+		res.isFig = b || br || bl;
+		if (! res.isFig) {return res}
 
 		// 上向き矢印
 		if (b) {
@@ -675,8 +732,8 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		let tl = "\\".indexOf(arnd[-1][-1].c) >= 0;
 		let tr = "/".indexOf(arnd[-1][1].c) >= 0;
 
-		res.isMrk = t || tl || tr;
-		if (! res.isMrk) {return res}
+		res.isFig = t || tl || tr;
+		if (! res.isFig) {return res}
 
 		// 下向き矢印
 		if (t) {
@@ -749,8 +806,8 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 		let tl = "＼".indexOf(arnd[-1][-1].c) >= 0;
 		let tr = "／".indexOf(arnd[-1][2].c) >= 0;
 
-		res.isMrk = t || tl || tr;
-		if (! res.isMrk) {return res}
+		res.isFig = t || tl || tr;
+		if (! res.isFig) {return res}
 
 		// 下向き矢印
 		if (t) {
@@ -824,8 +881,8 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 	}
 	if (c.c === '<') {
 		let l = "-+＋".indexOf(arnd[0][1].c) >= 0;
-		res.isMrk = l;
-		if (! res.isMrk) {return res}
+		res.isFig = l;
+		if (! res.isFig) {return res}
 
 		// 左向き矢印
 		xA[0] = x * uW;			yA[0] = y * uH + uH * 0.5;
@@ -836,8 +893,8 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 	}
 	if (c.c === '>') {
 		let r = "-+＋".indexOf(arnd[0][-1].c) >= 0;
-		res.isMrk = r;
-		if (! res.isMrk) {return res}
+		res.isFig = r;
+		if (! res.isFig) {return res}
 
 		// 左向き矢印
 		xA[0] = x * uW + uW;	yA[0] = y * uH + uH * 0.5;
@@ -850,9 +907,9 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 	//------------------------------------------------------------
 	// 斜め
 	if (c.c === '/') {
-		res.isMrk = "/^+".indexOf(arnd[-1][1].c) >= 0
+		res.isFig = "/^+".indexOf(arnd[-1][1].c) >= 0
 				 || "/v+".indexOf(arnd[ 1][-1].c) >= 0;
-		if (! res.isMrk) {return res}
+		if (! res.isFig) {return res}
 
 		// 右上斜め
 		xA[0] = x * uW + uW - lnW / 2;		yA[0] = y * uH;
@@ -864,9 +921,9 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 	}
 	if (c.c === '\\') {
-		res.isMrk = "\\^+".indexOf(arnd[-1][-1].c) >= 0
+		res.isFig = "\\^+".indexOf(arnd[-1][-1].c) >= 0
 				 || "\\v+".indexOf(arnd[ 1][1].c) >= 0;
-		if (! res.isMrk) {return res}
+		if (! res.isFig) {return res}
 
 		// 左上斜め
 		xA[0] = x * uW - lnW / 2;			yA[0] = y * uH;
@@ -878,9 +935,9 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 	}
 	if (c.c === '／') {
-		res.isMrk = "／＾＋".indexOf(arnd[-1][2].c) >= 0
+		res.isFig = "／＾＋".indexOf(arnd[-1][2].c) >= 0
 				 || "／ｖ＋".indexOf(arnd[ 1][-1].c) >= 0;
-		if (! res.isMrk) {return res}
+		if (! res.isFig) {return res}
 
 		// 右上斜め
 		xA[0] = x * uW + uW * 2 - lnW / 2;	yA[0] = y * uH;
@@ -892,9 +949,9 @@ mod.genPth = function(cArrArr, c, x, y, uW, uH, lnW, xOfst, yOfst) {
 			+ `L${xA[2]},${yA[2]} L${xA[3]},${yA[3]} Z `;
 	}
 	if (c.c === '＼') {
-		res.isMrk = "＼＾＋".indexOf(arnd[-1][-1].c) >= 0
+		res.isFig = "＼＾＋".indexOf(arnd[-1][-1].c) >= 0
 				 || "＼ｖ＋".indexOf(arnd[ 1][2].c) >= 0;
-		if (! res.isMrk) {return res}
+		if (! res.isFig) {return res}
 
 		// 左上斜め
 		xA[0] = x * uW - lnW / 2;			yA[0] = y * uH;
