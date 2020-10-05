@@ -1,4 +1,4 @@
-/*! Ascii Figure To SVG v1.1.0 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
+/*! Ascii Figure To SVG v1.1.1 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
 
 'use strict';
 
@@ -14,7 +14,7 @@ try {
 }
 
 //------------------------------------------------------------
-mod.version = '1.1.0';
+mod.version = '1.1.1';
 
 // デフォルト値
 mod.default = {
@@ -35,9 +35,9 @@ mod.default = {
  \くけこ/   +---+  \ /    |                                |
   +----+            +     +--------------------------------+
   
-  ＾  --＋    ＋    ＋--  ＾
-    ＼    ＼／  ＼／    ／  
-      ＼  ／＼｜／＼  ／    
+  ＾  --＋    ＋    ＋--  ＾  🔑😀
+    ＼    ＼／  ＼／    ／    💻⭐
+      ＼  ／＼｜／＼  ／      
         ＋  --＋--  ＋      
       ／  ＼  ｜  ／  ＼    
     ｖ      ｖ  ｖ      ｖ  
@@ -94,6 +94,12 @@ mod.isHan = function(c) {
 };
 
 //------------------------------------------------------------
+// 文字列を1文字ずつ配列化（サロゲートペアを考慮）
+mod.split = function(t) {
+	return [...t];
+};
+
+//------------------------------------------------------------
 // SVGの作成
 mod.genSvg = function(txt, opt) {
 	// 文字を調整
@@ -101,9 +107,10 @@ mod.genSvg = function(txt, opt) {
 
 	// 元文字列の計算
 	const rawObj = {txt: txt, yMax: txt.split('\n').length};
+
 	rawObj.xMax = Math.max.apply(null, txt.split('\n').map(y => {
 		if (y === '') { return 0 }
-		return y.split('').map(x => mod.isHan(x) ? 1 : 2).reduce((a, b) => a + b);
+		return mod.split(y).map(x => mod.isHan(x) ? 1 : 2).reduce((a, b) => a + b);
 	}));
 
 	// 制御領域の分離
@@ -136,7 +143,7 @@ mod.genSvg = function(txt, opt) {
 	let xMax = 0;
 	const cArrArr = txt.split('\n').map(x => {
 		const cArr = [];
-		x.split('').forEach(c => {
+		mod.split(x).forEach(c => {
 			// 変数の初期化
 			const isHan = mod.isHan(c);
 			const isFig = cMrk.indexOf(c) >= 0;
