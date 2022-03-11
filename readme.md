@@ -186,10 +186,10 @@ Webでの利用方法は、以下のとおりです。
 ```html
 <script src="asciiFigureToSvg.js"></script>
 <script>
-	const af2s = asciiFigureToSvg;
-	const txt = `<-- arrow -->`
-	const svg = af2s.genSvg(txt).svg;
-	console.log(svg);
+    const af2s = asciiFigureToSvg;
+    const txt = `<-- arrow -->`
+    const svg = af2s.genSvg(txt).svg;
+    console.log(svg);
 </script>
 ```
 
@@ -216,40 +216,40 @@ const svg = af2s.genSvg(txt, opt).svg;
 以下、パラメータとして指定可能な設定の全体像です。省略した場合は、デフォルトの値が使用されます。
 
 ```js
-	{
-		prms: {
-			unitW: 8,		// 半角文字1マスの横幅
-			unitH: 20,		// 文字1マスの高さ
-			lineW: 2		// 線の太さ
-			xMin: null		// X方向の最小値
-		},
-		txtAttr: {			// テキスト部分のSVGの属性
-			'font-family': 'Meiryo, sans-serif',
-			'font-weight': 'normal',
-			'font-size':   '16px',
-			'fill':        '#000',
-			'dominant-baseline': 'central',
-			'text-anchor': 'middle',
-			cond: {			// 条件分岐で属性を設定
-				han: {
-					'font-family': "MS Gothic, monospace",
-				},
-				zen: {
-				}
-			}
-		},
-		figAttr: {			// 作図部分のSVGの属性
-			'fill':   '#000',
-			'stroke': '#000',
-			'stroke-width': '0.1px'
-		},
-		margin: {	// 出力全体のマージン
-			top:    0,
-			bottom: 0,
-			left:   0,
-			right:  0
-		}
-	}
+    {
+        prms: {
+            unitW: 8,       // 半角文字1マスの横幅
+            unitH: 20,      // 文字1マスの高さ
+            lineW: 2        // 線の太さ
+            xMin: null      // X方向の最小値
+        },
+        txtAttr: {          // テキスト部分のSVGの属性
+            'font-family': 'Meiryo, sans-serif',
+            'font-weight': 'normal',
+            'font-size':   '16px',
+            'fill':        '#000',
+            'dominant-baseline': 'central',
+            'text-anchor': 'middle',
+            cond: {         // 条件分岐で属性を設定
+                han: {
+                    'font-family': "MS Gothic, monospace",
+                },
+                zen: {
+                }
+            }
+        },
+        figAttr: {          // 作図部分のSVGの属性
+            'fill':   '#000',
+            'stroke': '#000',
+            'stroke-width': '0.1px'
+        },
+        margin: {   // 出力全体のマージン
+            top:    0,
+            bottom: 0,
+            left:   0,
+            right:  0
+        }
+    }
 ```
 
 ### 戻り値
