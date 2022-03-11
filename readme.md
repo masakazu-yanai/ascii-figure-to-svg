@@ -10,6 +10,8 @@
 
 [Demo : アスキーアートの図をSVGに変換](https://crocro.com/tools/item/ascii_figure_to_svg.html)
 
+![](./img_svg.png)
+
 ------------------------------------------------------------
 ## 特徴
 
