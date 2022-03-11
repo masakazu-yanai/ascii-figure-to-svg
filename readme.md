@@ -257,15 +257,15 @@ const svg = af2s.genSvg(txt, opt).svg;
 以下のプロパティを持つオブジェクトが、「genSvg()」の戻り値として得られます。
 
 ```js
-	{
-		svg: svgTxt,	// SVGのテキスト
-		elArr: grp,		// SVGの各要素の配列
-		xMax: xMax,		// 半角換算文字数の横幅最大値
-		yMax: yMax,		// 行数
-		svgW: svgW,		// SVGの横幅
-		svgH: svgH,		// SVGの高さ
-		opt: opt		// デフォルト値と合成した設定
-	};
+    {
+        svg: svgTxt,    // SVGのテキスト
+        elArr: grp,     // SVGの各要素の配列
+        xMax: xMax,     // 半角換算文字数の横幅最大値
+        yMax: yMax,     // 行数
+        svgW: svgW,     // SVGの横幅
+        svgH: svgH,     // SVGの高さ
+        opt: opt        // デフォルト値と合成した設定
+    };
 ```
 
 ------------------------------------------------------------
