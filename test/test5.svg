@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<svg width="192" height="140" viewBox="0 0 192 140"
+    xmlns="http://www.w3.org/2000/svg" version="1.1">
+  <g transform="translate(0 0)">
+    	<text x="16" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">イ</text>
+	<text x="32" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ン</text>
+	<text x="48" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ク</text>
+	<text x="64" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">リ</text>
+	<text x="80" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">メ</text>
+	<text x="96" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ン</text>
+	<text x="112" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ト</text>
+	<text x="148" y="30" font-family="'MS Gothic', monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">i</text>
+	<text x="156" y="30" font-family="'MS Gothic', monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">+</text>
+	<text x="164" y="30" font-family="'MS Gothic', monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">+</text>
+	<text x="16" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">デ</text>
+	<text x="32" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ク</text>
+	<text x="48" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">リ</text>
+	<text x="64" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">メ</text>
+	<text x="80" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ン</text>
+	<text x="96" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ト</text>
+	<text x="148" y="110" font-family="'MS Gothic', monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">i</text>
+	<text x="156" y="110" font-family="'MS Gothic', monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">-</text>
+	<text x="164" y="110" font-family="'MS Gothic', monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">-</text>
+	<path d="M52,40 L56,50 L48,50 Z M51,50 L53,50 L53,60 L51,60 Z M51,60 L53,60 L53,80 L51,80 Z M52,100 L48,90 L56,90 Z M51,80 L53,80 L53,90 L51,90 Z " fill="#000" stroke="#000" stroke-width="0.1px" />
+	<path d="M131,9 L133,9 L133,11 L131,11 Z M131,10 L133,10 L133,20 L131,20 Z M132,9 L136,9 L136,11 L132,11 Z M136,9 L144,9 L144,11 L136,11 Z M144,9 L152,9 L152,11 L144,11 Z M152,9 L160,9 L160,11 L152,11 Z M160,9 L168,9 L168,11 L160,11 Z M168,9 L176,9 L176,11 L168,11 Z M179,9 L181,9 L181,11 L179,11 Z M179,10 L181,10 L181,20 L179,20 Z M176,9 L180,9 L180,11 L176,11 Z M131,20 L133,20 L133,40 L131,40 Z M179,20 L181,20 L181,40 L179,40 Z M131,49 L133,49 L133,51 L131,51 Z M131,40 L133,40 L133,50 L131,50 Z M132,49 L136,49 L136,51 L132,51 Z M136,49 L144,49 L144,51 L136,51 Z M144,49 L152,49 L152,51 L144,51 Z M152,49 L160,49 L160,51 L152,51 Z M160,49 L168,49 L168,51 L160,51 Z M168,49 L176,49 L176,51 L168,51 Z M179,49 L181,49 L181,51 L179,51 Z M179,40 L181,40 L181,50 L179,50 Z M176,49 L180,49 L180,51 L176,51 Z " fill="#00f" stroke="#00f" stroke-width="0.1px" />
+	<path d="M131,89 L133,89 L133,91 L131,91 Z M131,90 L133,90 L133,100 L131,100 Z M132,89 L136,89 L136,91 L132,91 Z M136,89 L144,89 L144,91 L136,91 Z M144,89 L152,89 L152,91 L144,91 Z M152,89 L160,89 L160,91 L152,91 Z M160,89 L168,89 L168,91 L160,91 Z M168,89 L176,89 L176,91 L168,91 Z M179,89 L181,89 L181,91 L179,91 Z M179,90 L181,90 L181,100 L179,100 Z M176,89 L180,89 L180,91 L176,91 Z M131,100 L133,100 L133,120 L131,120 Z M179,100 L181,100 L181,120 L179,120 Z M131,129 L133,129 L133,131 L131,131 Z M131,120 L133,120 L133,130 L131,130 Z M132,129 L136,129 L136,131 L132,131 Z M136,129 L144,129 L144,131 L136,131 Z M144,129 L152,129 L152,131 L144,131 Z M152,129 L160,129 L160,131 L152,131 Z M160,129 L168,129 L168,131 L160,131 Z M168,129 L176,129 L176,131 L168,131 Z M179,129 L181,129 L181,131 L179,131 Z M179,120 L181,120 L181,130 L179,130 Z M176,129 L180,129 L180,131 L176,131 Z " fill="#0f0" stroke="#0f0" stroke-width="0.1px" />
+  </g>
+</svg>

@@ -1,26 +1,19 @@
 <?xml version="1.0"?>
-<svg width="192" height="160" viewBox="0 0 192 160"
+<svg width="176" height="120" viewBox="0 0 176 120"
     xmlns="http://www.w3.org/2000/svg" version="1.1">
-	<text x="16" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">イ</text>
-	<text x="32" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ン</text>
-	<text x="48" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ク</text>
-	<text x="64" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">リ</text>
-	<text x="80" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">メ</text>
-	<text x="96" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ン</text>
-	<text x="112" y="30" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ト</text>
-	<text x="148" y="30" font-family="MS Gothic, monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">i</text>
-	<text x="156" y="30" font-family="MS Gothic, monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">+</text>
-	<text x="164" y="30" font-family="MS Gothic, monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">+</text>
-	<text x="16" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">デ</text>
-	<text x="32" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ク</text>
-	<text x="48" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">リ</text>
-	<text x="64" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">メ</text>
-	<text x="80" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ン</text>
-	<text x="96" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">ト</text>
-	<text x="148" y="110" font-family="MS Gothic, monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">i</text>
-	<text x="156" y="110" font-family="MS Gothic, monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">-</text>
-	<text x="164" y="110" font-family="MS Gothic, monospace" font-weight="normal" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">-</text>
-	<path d="" fill="#000" stroke="#000" stroke-width="0.1px" />
-	<path d="M131,9 L131,11 L133,11 L133,9 Z M131,10 L131,20 L133,20 L133,10 Z M132,9 L132,11 L136,11 L136,9 Z M136,9 L136,11 L144,11 L144,9 Z M144,9 L144,11 L152,11 L152,9 Z M152,9 L152,11 L160,11 L160,9 Z M160,9 L160,11 L168,11 L168,9 Z M168,9 L168,11 L176,11 L176,9 Z M179,9 L179,11 L181,11 L181,9 Z M179,10 L179,20 L181,20 L181,10 Z M176,9 L176,11 L180,11 L180,9 Z M131,20 L131,40 L133,40 L133,20 Z M179,20 L179,40 L181,40 L181,20 Z M131,49 L131,51 L133,51 L133,49 Z M131,40 L131,50 L133,50 L133,40 Z M132,49 L132,51 L136,51 L136,49 Z M136,49 L136,51 L144,51 L144,49 Z M144,49 L144,51 L152,51 L152,49 Z M152,49 L152,51 L160,51 L160,49 Z M160,49 L160,51 L168,51 L168,49 Z M168,49 L168,51 L176,51 L176,49 Z M179,49 L179,51 L181,51 L181,49 Z M179,40 L179,50 L181,50 L181,40 Z M176,49 L176,51 L180,51 L180,49 Z " fill="#00f" stroke="#00f" stroke-width="0.1px" />
-	<path d="M131,89 L131,91 L133,91 L133,89 Z M131,90 L131,100 L133,100 L133,90 Z M132,89 L132,91 L136,91 L136,89 Z M136,89 L136,91 L144,91 L144,89 Z M144,89 L144,91 L152,91 L152,89 Z M152,89 L152,91 L160,91 L160,89 Z M160,89 L160,91 L168,91 L168,89 Z M168,89 L168,91 L176,91 L176,89 Z M179,89 L179,91 L181,91 L181,89 Z M179,90 L179,100 L181,100 L181,90 Z M176,89 L176,91 L180,91 L180,89 Z M131,100 L131,120 L133,120 L133,100 Z M179,100 L179,120 L181,120 L181,100 Z M131,129 L131,131 L133,131 L133,129 Z M131,120 L131,130 L133,130 L133,120 Z M132,129 L132,131 L136,131 L136,129 Z M136,129 L136,131 L144,131 L144,129 Z M144,129 L144,131 L152,131 L152,129 Z M152,129 L152,131 L160,131 L160,129 Z M160,129 L160,131 L168,131 L168,129 Z M168,129 L168,131 L176,131 L176,129 Z M179,129 L179,131 L181,131 L181,129 Z M179,120 L179,130 L181,130 L181,120 Z M176,129 L176,131 L180,131 L180,129 Z " fill="#0f0" stroke="#0f0" stroke-width="0.1px" />
+  <g transform="translate(0 0)">
+    	<text x="8" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">こ</text>
+	<text x="24" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">こ</text>
+	<text x="40" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">に</text>
+	<text x="56" y="110" font-family="Meiryo, sans-serif" font-weight="bold" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">注</text>
+	<text x="72" y="110" font-family="Meiryo, sans-serif" font-weight="bold" font-size="16px" fill="#f00" dominant-baseline="central" text-anchor="middle">目</text>
+	<text x="88" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">し</text>
+	<text x="104" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">て</text>
+	<text x="120" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">下</text>
+	<text x="136" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">さ</text>
+	<text x="152" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">い</text>
+	<text x="168" y="110" font-family="Meiryo, sans-serif" font-weight="normal" font-size="16px" fill="#000" dominant-baseline="central" text-anchor="middle">！</text>
+	<path d="M35,9 L37,9 L37,11 L35,11 Z M35,10 L37,10 L37,20 L35,20 Z M36,9 L40,9 L40,11 L36,11 Z M40,9 L48,9 L48,11 L40,11 Z M48,9 L56,9 L56,11 L48,11 Z M56,9 L64,9 L64,11 L56,11 Z M64,9 L72,9 L72,11 L64,11 Z M72,9 L80,9 L80,11 L72,11 Z M80,9 L88,9 L88,11 L80,11 Z M91,9 L93,9 L93,11 L91,11 Z M91,10 L93,10 L93,20 L91,20 Z M88,9 L92,9 L92,11 L88,11 Z M35,20 L37,20 L37,40 L35,40 Z M91,20 L93,20 L93,40 L91,40 Z M35,49 L37,49 L37,51 L35,51 Z M35,40 L37,40 L37,50 L35,50 Z M36,49 L40,49 L40,51 L36,51 Z M40,49 L48,49 L48,51 L40,51 Z M48,49 L56,49 L56,51 L48,51 Z M56,49 L64,49 L64,51 L56,51 Z M64,49 L72,49 L72,51 L64,51 Z M72,49 L80,49 L80,51 L72,51 Z M80,49 L88,49 L88,51 L80,51 Z M91,49 L93,49 L93,51 L91,51 Z M91,40 L93,40 L93,50 L91,50 Z M88,49 L92,49 L92,51 L88,51 Z " fill="#000" stroke="#000" stroke-width="0.1px" />
+	<path d="M64,60 L68,70 L60,70 Z M63,70 L65,70 L65,80 L63,80 Z M63,80 L65,80 L65,100 L63,100 Z " fill="#f00" stroke="#f00" stroke-width="0.1px" />
+  </g>
 </svg>

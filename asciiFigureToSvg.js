@@ -1,4 +1,4 @@
-/*! Ascii Figure To SVG v1.1.1 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
+/*! Ascii Figure To SVG v1.1.2 | (c) 2020 Masakazu Yanai | https://crocro.com/ | https://twitter.com/ruten | Released under the MIT License */
 
 'use strict';
 
@@ -14,7 +14,7 @@ try {
 }
 
 //------------------------------------------------------------
-mod.version = '1.1.1';
+mod.version = '1.1.2';
 
 // デフォルト値
 mod.default = {
@@ -53,10 +53,11 @@ mod.default = {
 		prms: {
 			unitW: 8,		// 半角文字1マスの横幅
 			unitH: 20,		// 文字1マスの高さ
-			lineW: 2		// 線の太さ
+			lineW: 2,		// 線の太さ
+			xMin: null		// X方向の最小値
 		},
 		txtAttr: {			// テキスト部分のSVGの属性
-			'font-family': 'Meiryo, sans-serif',
+			'font-family': "Meiryo, sans-serif",
 			'font-weight': 'normal',
 			'font-size':   '16px',
 			'fill':        '#000',
@@ -64,7 +65,7 @@ mod.default = {
 			'text-anchor': 'middle',
 			cond: {			// 条件分岐で属性を設定
 				han: {
-					'font-family': "MS Gothic, monospace",
+					'font-family': "'MS Gothic', monospace",
 				},
 				zen: {
 				}
@@ -74,6 +75,12 @@ mod.default = {
 			'fill':   '#000',
 			'stroke': '#000',
 			'stroke-width': '0.1px'
+		},
+		margin: {	// 出力全体のマージン
+			top:    0,
+			bottom: 0,
+			left:   0,
+			right:  0
 		}
 	}
 };
@@ -140,7 +147,7 @@ mod.genSvg = function(txt, opt) {
 
 	// 文字を分解
 	const cMrk = "+-|<>^v＋｜＾ｖ／＼/\\";	// 記号候補の文字
-	let xMax = 0;
+	let xMax = 0;	// X方向の最大値
 	const cArrArr = txt.split('\n').map(x => {
 		const cArr = [];
 		mod.split(x).forEach(c => {
@@ -173,6 +180,9 @@ mod.genSvg = function(txt, opt) {
 		});
 	});
 	//console.log(opt);
+
+	// X方向の最小値
+	if (opt.prms.xMin && xMax < opt.prms.xMin) { xMax = opt.prms.xMin }
 
 	// 設定変数の初期化
 	const uW  = opt.prms.unitW;		// 単位サイズ横幅
@@ -275,12 +285,24 @@ mod.genSvg = function(txt, opt) {
 
 	// SVG作成
 	const svgIn = grp.map(x => `\t${x}`).join('\n');
-	const svgW = xMax * uW;
-	const svgH = yMax * uH;
+//	const svgW = xMax * uW;
+//	const svgH = yMax * uH;
+//	const svgTxt = `<?xml version="1.0"?>
+//<svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}"
+//    xmlns="http://www.w3.org/2000/svg" version="1.1">
+//${svgIn}
+//</svg>`;
+
+	const aaW = xMax * uW;
+	const aaH = yMax * uH;
+	const svgW = aaW + opt.margin.left + opt.margin.right;
+	const svgH = aaH + opt.margin.top  + opt.margin.bottom;
 	const svgTxt = `<?xml version="1.0"?>
 <svg width="${svgW}" height="${svgH}" viewBox="0 0 ${svgW} ${svgH}"
     xmlns="http://www.w3.org/2000/svg" version="1.1">
-${svgIn}
+  <g transform="translate(${opt.margin.left} ${opt.margin.top})">
+    ${svgIn}
+  </g>
 </svg>`;
 
 	// 戻り値の作成

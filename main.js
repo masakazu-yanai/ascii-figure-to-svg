@@ -3,10 +3,15 @@
 (function() {
 	//------------------------------------------------------------
 	// 引数
-	const pNode = process.argv[0];	// console.log('pNode :', pNode);
-	const pThis = process.argv[1];	// console.log('pThis :', pThis);
-	const pArg  = process.argv[2];	// console.log('pArg  :', pArg);
-	if (pArg === undefined) { return }
+	const argv = Array.from(process.argv);
+	argv._node = argv.shift();
+	argv._this = argv.shift();
+	if (argv[0] === undefined) { return }
+
+	argv.pSrc = argv[0];
+	argv.pOpt = argv[1];
+
+	// console.log('argv :', argv);
 
 	// モジュールの読み込み
 	const path = require('path');
@@ -17,39 +22,55 @@
 	//------------------------------------------------------------
 	// 実行対象ファイルの初期化
 	// rw - rewrite
-	let pSrcArr = [];
-	try {
-		const stat = fs.statSync(pArg);
+	const srcArray = (p => {
+		try {
+			const re = /\.aa\.txt$/;
+			const stat = fs.statSync(p);
 
-		if (stat.isFile()) {
-			if (pArg.match(/\.aa\.txt$/)) {
-				pSrcArr = [{p: pArg, rw: true}];
+			if (stat.isFile()) {
+				if (p.match(re)) {
+					return [{p: p, rw: true}];
+				}
+			}
+			if (stat.isDirectory()) {
+				return fs.readdirSync(p)
+					.filter(x => x.match(re))
+					.map(x => ({p: path.resolve(p, x), rw: false}));
+			}
+		} catch(e) {
+			console.log(e);
+		}
+		return [];
+	})(argv.pSrc);
+
+	//console.log({srcArray});
+
+	//------------------------------------------------------------
+	// 設定の読み込み
+	const opt = (p => {
+		if (p) {
+			try {
+				return require(p);
+			} catch(e) {
+				console.log(e);
 			}
 		}
-		if (stat.isDirectory()) {
-			pSrcArr = fs.readdirSync(pArg);
-			const dir  = pArg + path.sep;
-			pSrcArr = pSrcArr
-				.filter(x => x.match(/\.aa\.txt$/))
-				.map(x => ({p: dir + x, rw: false}));
-		}
-	} catch(e) {
-		console.log(e);
-		return;
-	}
+		return {};
+	})(argv.pOpt);
 
 	//------------------------------------------------------------
 	// 実行処理
-	const exec = function(arg) {
+	const exec = function(src, opt) {
 		// 変数の初期化
-		const pSrc = arg.p;
-		const ext  = path.extname(pSrc);
-		const bsNm = path.basename(pSrc, ext).replace(/\.aa$/, '');
-		const dir  = path.dirname(pSrc) + path.sep;
-		const pDst = dir + bsNm + '.svg';
+		const pSrc = src.p;
+		const ext = path.extname(pSrc);
+		const basename = path.basename(pSrc, ext).replace(/\.aa$/, '');
+		const dir = path.dirname(pSrc) + path.sep;
+		const fnmDst = `${basename}.svg`;
+		const pDst = dir + fnmDst;
 
 		// 上書き確認
-		if (arg.rw === false) {
+		if (src.rw === false) {
 			try {
 				const stat = fs.statSync(pDst);
 				if (stat.isFile()) {
@@ -62,11 +83,11 @@
 		// 変換処理
 		console.log('[dst]', pDst);
 		const tSrc = fs.readFileSync(pSrc, 'utf8');	// ファイル読み込み
-		const tDst = af2s.genSvg(tSrc).svg;			// 実行
+		const tDst = af2s.genSvg(tSrc, opt).svg;	// 実行
 		fs.writeFileSync(pDst, tDst, 'utf8');
 	}
 
 	// 各ファイルに実行
-	pSrcArr.forEach(x => exec(x));	// 実行処理
+	srcArray.forEach(x => exec(x, opt));	// 実行処理
 
 })();
